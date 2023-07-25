@@ -7,7 +7,7 @@ jobs:
       - image: "circleci/python:3.6.4"
     steps:
       - checkout
-      - run: python main.py
+      - run: python app.py
   test:
     working_directory: ~/main
     docker:
