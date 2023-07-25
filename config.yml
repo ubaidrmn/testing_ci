@@ -1,0 +1,17 @@
+version: 2.1
+
+jobs:
+  build:
+    working_directory: ~/main
+    docker:
+      - image: "circleci/python:3.6.4"
+    steps:
+      - checkout
+      - run: python main.py
+  test:
+    working_directory: ~/main
+    docker:
+      - image: "circleci/python:3.6.4"
+    steps:
+      - checkout
+      - run: python test.py
