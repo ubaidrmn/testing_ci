@@ -1,0 +1,42 @@
+name: Trigger auto deployment for first-app
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '**'
+    - '.github/workflows/first-app-AutoDeployTrigger-20c8651e-2af3-46a0-9ae6-877a9f7e31a1.yml'
+
+  # Allow mannually trigger 
+  workflow_dispatch:
+      
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.FIRSTAPP_AZURE_CREDENTIALS }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          appSourcePath: ${{ github.workspace }} 
+          registryUrl: docker.io
+          registryUsername: ${{ secrets.FIRSTAPP_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.FIRSTAPP_REGISTRY_PASSWORD }}
+          containerAppName: first-app
+          resourceGroup: resource_group_1
+          imageToBuild: ubaidrmn/first-app:${{ github.sha }}
+          dockerfilePath: Dockerfile
+
+     
+
